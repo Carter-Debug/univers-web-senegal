@@ -6,25 +6,29 @@ const services = [
     icon: Globe,
     title: "Sites Web Vitrines Modernes",
     description: "Des sites web élégants et responsive qui mettent en valeur votre activité et attirent vos clients.",
-    features: ["Design moderne", "100% responsive", "SEO optimisé", "Performance maximale"]
+    features: ["Design moderne", "100% responsive", "SEO optimisé", "Performance maximale"],
+    price: "80.000"
   },
   {
     icon: Building2,
     title: "Sites Entreprise",
     description: "Solutions professionnelles adaptées aux besoins spécifiques de votre entreprise.",
-    features: ["Interface personnalisée", "Gestion de contenu", "Multi-pages", "Support technique"]
+    features: ["Interface personnalisée", "Gestion de contenu", "Multi-pages", "Support technique"],
+    price: "150.000"
   },
   {
     icon: Users,
     title: "Sites pour ONG",
     description: "Plateformes dédiées aux organisations non gouvernementales pour amplifier leur impact.",
-    features: ["Portail de dons", "Espace bénévoles", "Blog intégré", "Galerie photos"]
+    features: ["Portail de dons", "Espace bénévoles", "Blog intégré", "Galerie photos"],
+    price: "150.000"
   },
   {
     icon: ShoppingCart,
     title: "Sites E-commerce",
     description: "Boutiques en ligne complètes pour vendre vos produits partout au Sénégal et au-delà.",
-    features: ["Catalogue produits", "Paiement sécurisé", "Gestion commandes", "Tableau de bord"]
+    features: ["Catalogue produits", "Paiement sécurisé", "Gestion commandes", "Tableau de bord"],
+    price: "200.000"
   }
 ];
 
@@ -73,9 +77,16 @@ const Services = () => {
                 <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors duration-300">
                   {service.title}
                 </CardTitle>
-                <CardDescription className="text-base leading-relaxed">
+                <CardDescription className="text-base leading-relaxed mb-4">
                   {service.description}
                 </CardDescription>
+                
+                <div className="flex items-baseline gap-1">
+                  <span className="text-3xl font-bold bg-[linear-gradient(135deg,hsl(var(--primary)),hsl(var(--secondary)))] bg-clip-text text-transparent">
+                    {service.price}
+                  </span>
+                  <span className="text-sm text-muted-foreground font-medium">FCFA</span>
+                </div>
               </CardHeader>
               
               <CardContent>
