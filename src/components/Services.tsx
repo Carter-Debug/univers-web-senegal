@@ -21,7 +21,7 @@ const services = [
     title: "Sites pour ONG",
     description: "Plateformes dédiées aux organisations non gouvernementales pour amplifier leur impact.",
     features: ["Portail de dons", "Espace bénévoles", "Blog intégré", "Galerie photos"],
-    price: "150.000"
+    price: "180.000"
   },
   {
     icon: ShoppingCart,
