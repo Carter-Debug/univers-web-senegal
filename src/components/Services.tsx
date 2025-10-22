@@ -7,7 +7,7 @@ const services = [
     title: "Sites Web Vitrines Modernes",
     description: "Des sites web élégants et responsive qui mettent en valeur votre activité et attirent vos clients.",
     features: ["Design moderne", "100% responsive", "SEO optimisé", "Performance maximale"],
-    price: "80.000"
+    price: "90.000"
   },
   {
     icon: Building2,
