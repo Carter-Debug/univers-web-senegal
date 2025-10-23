@@ -21,8 +21,8 @@ const Contact = () => {
     {
       icon: MapPin,
       label: "Localisation",
-      value: "Sénégal",
-      linkText: "Sénégal"
+      value: "Dakar, Sénégal",
+      linkText: "Dakar, Sénégal"
     }
   ];
 

@@ -1,5 +1,11 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
+import testimonialAmadou from "@/assets/testimonial-amadou.jpg";
+import testimonialFatou from "@/assets/testimonial-fatou.jpg";
+import testimonialMamadou from "@/assets/testimonial-mamadou.jpg";
+import testimonialAissatou from "@/assets/testimonial-aissatou.jpg";
+import testimonialOusmane from "@/assets/testimonial-ousmane.jpg";
+import testimonialKhady from "@/assets/testimonial-khady.jpg";
 
 const testimonials = [
   {
@@ -8,7 +14,7 @@ const testimonials = [
     location: "Dakar",
     content: "Univers Web SA a créé un site vitrine magnifique pour notre entreprise. Leur professionnalisme et leur réactivité sont exceptionnels. Je recommande vivement leurs services !",
     rating: 5,
-    avatar: "AD"
+    avatar: testimonialAmadou
   },
   {
     name: "Fatou Sène",
@@ -16,7 +22,7 @@ const testimonials = [
     location: "Thiès",
     content: "Grâce à leur expertise, nous avons maintenant une plateforme moderne qui nous permet de mieux communiquer avec nos donateurs. Une équipe à l'écoute et très compétente.",
     rating: 5,
-    avatar: "FS"
+    avatar: testimonialFatou
   },
   {
     name: "Mamadou Ba",
@@ -24,7 +30,7 @@ const testimonials = [
     location: "Saint-Louis",
     content: "Notre site e-commerce fonctionne parfaitement ! Les ventes ont augmenté de 40% depuis le lancement. Merci à toute l'équipe d'Univers Web SA Consulting.",
     rating: 5,
-    avatar: "MB"
+    avatar: testimonialMamadou
   },
   {
     name: "Aïssatou Ndiaye",
@@ -32,7 +38,7 @@ const testimonials = [
     location: "Dakar",
     content: "Un travail de qualité exceptionnelle. Notre site entreprise reflète parfaitement notre image professionnelle. Support technique au top !",
     rating: 5,
-    avatar: "AN"
+    avatar: testimonialAissatou
   },
   {
     name: "Ousmane Sarr",
@@ -40,7 +46,7 @@ const testimonials = [
     location: "Mbour",
     content: "Excellent service ! Notre boutique en ligne est fluide et performante. Les clients peuvent maintenant commander facilement nos produits partout au Sénégal.",
     rating: 5,
-    avatar: "OS"
+    avatar: testimonialOusmane
   },
   {
     name: "Khady Diallo",
@@ -48,7 +54,7 @@ const testimonials = [
     location: "Dakar",
     content: "Une équipe professionnelle qui comprend vraiment les besoins des entreprises sénégalaises. Le site est moderne, rapide et optimisé. Bravo !",
     rating: 5,
-    avatar: "KD"
+    avatar: testimonialKhady
   }
 ];
 
@@ -105,9 +111,11 @@ const Testimonials = () => {
                 {/* Author info */}
                 <div className="flex items-center gap-4 pt-4 border-t border-border/50">
                   <div className="relative">
-                    <div className="w-12 h-12 rounded-full bg-[linear-gradient(135deg,hsl(var(--primary)),hsl(var(--primary-glow)))] flex items-center justify-center text-white font-bold group-hover:scale-110 transition-transform duration-300 shadow-[var(--shadow-card)]">
-                      {testimonial.avatar}
-                    </div>
+                    <img 
+                      src={testimonial.avatar}
+                      alt={testimonial.name}
+                      className="w-12 h-12 rounded-full object-cover group-hover:scale-110 transition-transform duration-300 shadow-[var(--shadow-card)] border-2 border-primary/20"
+                    />
                     {/* Decorative glow */}
                     <div className="absolute inset-0 w-12 h-12 rounded-full bg-primary/20 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   </div>
