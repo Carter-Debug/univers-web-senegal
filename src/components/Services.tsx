@@ -15,6 +15,7 @@ const services = [
     title: "Sites Entreprise",
     description: "Solutions professionnelles adaptées aux besoins spécifiques de votre entreprise.",
     features: ["Interface personnalisée", "Gestion de contenu", "Multi-pages", "Support technique"],
+    basePrice: "200.000",
     price: "150.000"
   },
   {
@@ -22,6 +23,7 @@ const services = [
     title: "Sites pour ONG",
     description: "Plateformes dédiées aux organisations non gouvernementales pour amplifier leur impact.",
     features: ["Portail de dons", "Espace bénévoles", "Blog intégré", "Galerie photos"],
+    basePrice: "250.000",
     price: "180.000"
   },
   {
@@ -29,6 +31,7 @@ const services = [
     title: "Sites E-commerce",
     description: "Boutiques en ligne complètes pour vendre vos produits partout au Sénégal et au-delà.",
     features: ["Catalogue produits", "Paiement sécurisé", "Gestion commandes", "Tableau de bord"],
+    basePrice: "300.000",
     price: "200.000"
   }
 ];
