@@ -7,6 +7,7 @@ const services = [
     title: "Sites Web Vitrines Modernes",
     description: "Des sites web élégants et responsive qui mettent en valeur votre activité et attirent vos clients.",
     features: ["Design moderne", "100% responsive", "SEO optimisé", "Performance maximale"],
+    basePrice: "120.000",
     price: "90.000"
   },
   {
@@ -81,11 +82,18 @@ const Services = () => {
                   {service.description}
                 </CardDescription>
                 
-                <div className="flex items-baseline gap-1">
-                  <span className="text-3xl font-bold bg-[linear-gradient(135deg,hsl(var(--primary)),hsl(var(--secondary)))] bg-clip-text text-transparent">
-                    {service.price}
-                  </span>
-                  <span className="text-sm text-muted-foreground font-medium">FCFA</span>
+                <div className="flex items-baseline gap-2 flex-wrap">
+                  {service.basePrice && (
+                    <span className="text-lg font-medium text-muted-foreground line-through">
+                      {service.basePrice} FCFA
+                    </span>
+                  )}
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-bold bg-[linear-gradient(135deg,hsl(var(--primary)),hsl(var(--secondary)))] bg-clip-text text-transparent">
+                      {service.price}
+                    </span>
+                    <span className="text-sm text-muted-foreground font-medium">FCFA</span>
+                  </div>
                 </div>
               </CardHeader>
               
