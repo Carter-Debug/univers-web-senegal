@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { MessageCircle, X, Send, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Loader2, Mic, Volume2, VolumeX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -25,7 +25,12 @@ const AIAssistant = () => {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
+  const [audioEnabled, setAudioEnabled] = useState(true);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+  const currentAudioRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
   // Auto-scroll to bottom when new messages arrive
@@ -38,12 +43,159 @@ const AIAssistant = () => {
     }
   }, [messages]);
 
-  const handleSendMessage = async () => {
-    if (!inputValue.trim() || isLoading) return;
+  const playAudioResponse = async (text: string) => {
+    if (!audioEnabled) return;
+
+    try {
+      const TTS_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/text-to-speech`;
+      
+      const response = await fetch(TTS_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+        },
+        body: JSON.stringify({
+          text,
+          voice: "alloy"
+        }),
+      });
+
+      if (!response.ok) {
+        console.error('TTS error:', response.status);
+        return;
+      }
+
+      const { audioContent } = await response.json();
+      
+      // Convert base64 to audio blob
+      const binaryString = atob(audioContent);
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      const audioBlob = new Blob([bytes], { type: 'audio/mp3' });
+      const audioUrl = URL.createObjectURL(audioBlob);
+
+      // Stop any currently playing audio
+      if (currentAudioRef.current) {
+        currentAudioRef.current.pause();
+        currentAudioRef.current = null;
+      }
+
+      // Play new audio
+      const audio = new Audio(audioUrl);
+      currentAudioRef.current = audio;
+      await audio.play();
+      
+      audio.onended = () => {
+        URL.revokeObjectURL(audioUrl);
+        currentAudioRef.current = null;
+      };
+
+    } catch (error) {
+      console.error('Error playing audio:', error);
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      audioChunksRef.current = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+        await transcribeAudio(audioBlob);
+        
+        stream.getTracks().forEach(track => track.stop());
+      };
+
+      mediaRecorder.start();
+      setIsRecording(true);
+      
+      toast({
+        title: "Enregistrement en cours",
+        description: "Parlez maintenant...",
+      });
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible d'accéder au microphone.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+    }
+  };
+
+  const transcribeAudio = async (audioBlob: Blob) => {
+    try {
+      setIsLoading(true);
+      
+      // Convert blob to base64
+      const reader = new FileReader();
+      reader.readAsDataURL(audioBlob);
+      
+      reader.onloadend = async () => {
+        const base64Audio = (reader.result as string).split(',')[1];
+        
+        const TRANSCRIBE_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/transcribe-audio`;
+        
+        const response = await fetch(TRANSCRIBE_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({ audio: base64Audio }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Transcription failed');
+        }
+
+        const { text } = await response.json();
+        
+        if (text && text.trim()) {
+          setInputValue(text);
+          // Automatically send the transcribed message
+          await handleSendMessage(text);
+        }
+      };
+    } catch (error) {
+      console.error('Error transcribing audio:', error);
+      toast({
+        title: "Erreur",
+        description: "Impossible de transcrire l'audio.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSendMessage = async (messageText?: string) => {
+    const textToSend = messageText || inputValue.trim();
+    if (!textToSend || isLoading) return;
 
     const userMessage: Message = {
       id: messages.length + 1,
-      text: inputValue,
+      text: textToSend,
       sender: "user",
       timestamp: new Date(),
     };
@@ -174,6 +326,11 @@ const AIAssistant = () => {
         }
       }
 
+      // Play audio response if enabled
+      if (assistantText && audioEnabled) {
+        await playAudioResponse(assistantText);
+      }
+
     } catch (error) {
       console.error("Error sending message:", error);
       toast({
@@ -263,7 +420,7 @@ const AIAssistant = () => {
               </div>
             </ScrollArea>
 
-            <div className="p-4 border-t">
+            <div className="p-4 border-t space-y-2">
               <div className="flex gap-2">
                 <Input
                   value={inputValue}
@@ -271,18 +428,47 @@ const AIAssistant = () => {
                   onKeyPress={handleKeyPress}
                   placeholder="Tapez votre message..."
                   className="flex-1"
-                  disabled={isLoading}
+                  disabled={isLoading || isRecording}
                 />
                 <Button 
-                  onClick={handleSendMessage} 
+                  onClick={isRecording ? stopRecording : startRecording}
                   size="icon"
-                  disabled={isLoading || !inputValue.trim()}
+                  variant={isRecording ? "destructive" : "outline"}
+                  disabled={isLoading}
+                  aria-label={isRecording ? "Arrêter l'enregistrement" : "Enregistrer un message vocal"}
+                >
+                  <Mic className={`h-4 w-4 ${isRecording ? 'animate-pulse' : ''}`} />
+                </Button>
+                <Button 
+                  onClick={() => handleSendMessage()} 
+                  size="icon"
+                  disabled={isLoading || !inputValue.trim() || isRecording}
                   aria-label="Envoyer le message"
                 >
                   {isLoading ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
                   ) : (
                     <Send className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+              <div className="flex justify-end">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setAudioEnabled(!audioEnabled)}
+                  className="text-xs"
+                >
+                  {audioEnabled ? (
+                    <>
+                      <Volume2 className="h-3 w-3 mr-1" />
+                      Audio activé
+                    </>
+                  ) : (
+                    <>
+                      <VolumeX className="h-3 w-3 mr-1" />
+                      Audio désactivé
+                    </>
                   )}
                 </Button>
               </div>
