@@ -57,7 +57,7 @@ const AIAssistant = () => {
         },
         body: JSON.stringify({
           text,
-          voice: "onyx"
+          voice: "nova"
         }),
       });
 
