@@ -1,5 +1,6 @@
 import { Play, Globe, Code, Rocket, Users } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
+import promoBackground from "@/assets/promo-background.jpg";
 
 const Video = () => {
   return (
@@ -14,6 +15,15 @@ const Video = () => {
         <div className="max-w-5xl mx-auto">
           <Card className="overflow-hidden border-primary/30 shadow-2xl animate-fade-in">
             <div className="relative bg-gradient-to-br from-primary via-primary/90 to-accent p-12 md:p-16 text-center">
+              {/* African Background Image */}
+              <div className="absolute inset-0 opacity-20">
+                <img 
+                  src={promoBackground} 
+                  alt="African team working" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              
               {/* Background Pattern */}
               <div className="absolute inset-0 opacity-10">
                 <div className="absolute top-10 left-10 w-32 h-32 border-2 border-white rounded-full" />
