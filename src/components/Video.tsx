@@ -27,33 +27,13 @@ const Video = () => {
           <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-300 animate-fade-in border-primary/20">
             <CardContent className="p-0">
               <div className="relative aspect-video bg-gradient-to-br from-primary/20 to-accent/20">
-                {/* Video Placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-primary/30 to-accent/30 backdrop-blur-sm">
-                  <div className="text-center space-y-4 p-6">
-                    <div className="mx-auto w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Play className="h-10 w-10 text-primary fill-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-foreground mb-2">
-                        Version Française
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Cliquez pour voir notre vidéo de présentation
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Replace this with your actual YouTube/Vimeo embed */}
-                {/* Example YouTube embed:
                 <iframe
-                  className="w-full h-full"
-                  src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+                  className="w-full h-full absolute inset-0"
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1"
                   title="Univers Web SA Consulting - Version Française"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                 />
-                */}
               </div>
               
               <div className="p-6 bg-card">
@@ -70,33 +50,13 @@ const Video = () => {
           <Card className="group overflow-hidden hover:shadow-2xl transition-all duration-300 animate-fade-in border-primary/20" style={{ animationDelay: "0.1s" }}>
             <CardContent className="p-0">
               <div className="relative aspect-video bg-gradient-to-br from-accent/20 to-primary/20">
-                {/* Video Placeholder */}
-                <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-accent/30 to-primary/30 backdrop-blur-sm">
-                  <div className="text-center space-y-4 p-6">
-                    <div className="mx-auto w-20 h-20 rounded-full bg-accent/20 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                      <Play className="h-10 w-10 text-accent fill-accent" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-foreground mb-2">
-                        English Version
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        Click to watch our presentation video
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Replace this with your actual YouTube/Vimeo embed */}
-                {/* Example YouTube embed:
                 <iframe
-                  className="w-full h-full"
-                  src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+                  className="w-full h-full absolute inset-0"
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ?enablejsapi=1"
                   title="Univers Web SA Consulting - English Version"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   allowFullScreen
                 />
-                */}
               </div>
               
               <div className="p-6 bg-card">
