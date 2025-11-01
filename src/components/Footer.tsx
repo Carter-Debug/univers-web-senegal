@@ -25,7 +25,7 @@ const Footer = () => {
     {
       name: "WhatsApp",
       icon: MessageCircle,
-      url: "https://wa.me/775936938",
+      url: "https://wa.me/221775936938",
     },
     {
       name: "LinkedIn",
