@@ -14,7 +14,191 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_profiles: {
+        Row: {
+          created_at: string | null
+          full_name: string
+          id: string
+          role: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          full_name: string
+          id?: string
+          role?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          full_name?: string
+          id?: string
+          role?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      invoices: {
+        Row: {
+          amount: number
+          client_email: string
+          client_name: string
+          client_phone: string
+          created_at: string | null
+          id: string
+          invoice_number: string
+          paid_at: string | null
+          payment_method: Database["public"]["Enums"]["payment_method"] | null
+          payment_status: Database["public"]["Enums"]["payment_status"] | null
+          quote_id: string | null
+          service_description: string
+        }
+        Insert: {
+          amount: number
+          client_email: string
+          client_name: string
+          client_phone: string
+          created_at?: string | null
+          id?: string
+          invoice_number: string
+          paid_at?: string | null
+          payment_method?: Database["public"]["Enums"]["payment_method"] | null
+          payment_status?: Database["public"]["Enums"]["payment_status"] | null
+          quote_id?: string | null
+          service_description: string
+        }
+        Update: {
+          amount?: number
+          client_email?: string
+          client_name?: string
+          client_phone?: string
+          created_at?: string | null
+          id?: string
+          invoice_number?: string
+          paid_at?: string | null
+          payment_method?: Database["public"]["Enums"]["payment_method"] | null
+          payment_status?: Database["public"]["Enums"]["payment_status"] | null
+          quote_id?: string | null
+          service_description?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_quote_id_fkey"
+            columns: ["quote_id"]
+            isOneToOne: false
+            referencedRelation: "quotes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      promo_codes: {
+        Row: {
+          active: boolean | null
+          code: string
+          created_at: string | null
+          current_uses: number | null
+          discount_percentage: number
+          expires_at: string | null
+          id: string
+          max_uses: number | null
+          min_amount: number
+        }
+        Insert: {
+          active?: boolean | null
+          code: string
+          created_at?: string | null
+          current_uses?: number | null
+          discount_percentage: number
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          min_amount: number
+        }
+        Update: {
+          active?: boolean | null
+          code?: string
+          created_at?: string | null
+          current_uses?: number | null
+          discount_percentage?: number
+          expires_at?: string | null
+          id?: string
+          max_uses?: number | null
+          min_amount?: number
+        }
+        Relationships: []
+      }
+      quotes: {
+        Row: {
+          client_email: string
+          client_name: string
+          client_phone: string
+          created_at: string | null
+          description: string | null
+          discount_percentage: number | null
+          estimated_price: number
+          final_price: number
+          id: string
+          promo_code: string | null
+          service_type: string
+          status: Database["public"]["Enums"]["service_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          client_email: string
+          client_name: string
+          client_phone: string
+          created_at?: string | null
+          description?: string | null
+          discount_percentage?: number | null
+          estimated_price: number
+          final_price: number
+          id?: string
+          promo_code?: string | null
+          service_type: string
+          status?: Database["public"]["Enums"]["service_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          client_email?: string
+          client_name?: string
+          client_phone?: string
+          created_at?: string | null
+          description?: string | null
+          discount_percentage?: number | null
+          estimated_price?: number
+          final_price?: number
+          id?: string
+          promo_code?: string | null
+          service_type?: string
+          status?: Database["public"]["Enums"]["service_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      site_visits: {
+        Row: {
+          id: string
+          page_url: string
+          user_agent: string | null
+          visited_at: string | null
+          visitor_ip: string | null
+        }
+        Insert: {
+          id?: string
+          page_url: string
+          user_agent?: string | null
+          visited_at?: string | null
+          visitor_ip?: string | null
+        }
+        Update: {
+          id?: string
+          page_url?: string
+          user_agent?: string | null
+          visited_at?: string | null
+          visitor_ip?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +207,17 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      payment_method:
+        | "wave"
+        | "orange_money"
+        | "yas"
+        | "wizall"
+        | "keyzen"
+        | "visa"
+        | "uba"
+        | "paypal"
+      payment_status: "pending" | "paid" | "failed" | "refunded"
+      service_status: "pending" | "in_progress" | "completed" | "cancelled"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +344,19 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      payment_method: [
+        "wave",
+        "orange_money",
+        "yas",
+        "wizall",
+        "keyzen",
+        "visa",
+        "uba",
+        "paypal",
+      ],
+      payment_status: ["pending", "paid", "failed", "refunded"],
+      service_status: ["pending", "in_progress", "completed", "cancelled"],
+    },
   },
 } as const
