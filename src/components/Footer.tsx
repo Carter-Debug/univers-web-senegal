@@ -15,7 +15,7 @@ const Footer = () => {
     {
       name: "Facebook",
       icon: Facebook,
-      url: "https://www.facebook.com/Univers Web SA Consulting",
+      url: "https://www.facebook.com/profile.php?id=61579392244563",
     },
     {
       name: "Twitter",
