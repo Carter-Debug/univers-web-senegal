@@ -28,6 +28,11 @@ const QuoteRequest = () => {
     { value: "premium", label: "Site Premium (>500K)", basePrice: 750000 }
   ];
 
+  // Calculer le prix estimé basé sur le type de service sélectionné
+  const selectedService = serviceTypes.find(s => s.value === formData.service_type);
+  const estimatedPrice = selectedService?.basePrice || 0;
+  const isPromoCodeDisabled = estimatedPrice < 500000;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -70,8 +75,29 @@ const QuoteRequest = () => {
 
       if (error) throw error;
 
+      // Envoyer l'email de confirmation au client
+      try {
+        await supabase.functions.invoke('send-quote-email', {
+          body: {
+            client_name: formData.client_name,
+            client_email: formData.client_email,
+            client_phone: formData.client_phone,
+            service_type: formData.service_type,
+            description: formData.description,
+            estimated_price: estimatedPrice,
+            final_price: finalPrice,
+            discount_percentage: discountPercentage,
+            promo_code: formData.promo_code || undefined
+          }
+        });
+        console.log("Email sent successfully");
+      } catch (emailError) {
+        console.error("Error sending email:", emailError);
+        // Ne pas bloquer l'utilisateur si l'email échoue
+      }
+
       toast.success("Demande de devis envoyée avec succès!", {
-        description: `Prix estimé: ${finalPrice.toLocaleString()} FCFA ${discountPercentage > 0 ? `(Réduction de ${discountPercentage}%)` : ""}`
+        description: `Prix estimé: ${finalPrice.toLocaleString()} FCFA ${discountPercentage > 0 ? `(Réduction de ${discountPercentage}%)` : ""}. Un email de confirmation vous a été envoyé.`
       });
 
       setFormData({
@@ -193,10 +219,17 @@ const QuoteRequest = () => {
                     value={formData.promo_code}
                     onChange={(e) => setFormData({...formData, promo_code: e.target.value})}
                     placeholder="UniversWeb25"
+                    disabled={isPromoCodeDisabled}
                   />
-                  <p className="text-sm text-muted-foreground">
-                    Code promo disponible: <span className="font-bold text-primary">UniversWeb25</span> pour 40% de réduction sur les sites premium
-                  </p>
+                  {isPromoCodeDisabled ? (
+                    <p className="text-sm text-amber-600 dark:text-amber-400">
+                      ⚠️ Les codes promo sont uniquement disponibles pour les sites de 500.000 FCFA et plus
+                    </p>
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      Code promo disponible: <span className="font-bold text-primary">UniversWeb25</span> pour 40% de réduction sur les sites premium
+                    </p>
+                  )}
                 </div>
 
                 <Button
