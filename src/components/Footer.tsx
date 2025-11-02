@@ -42,10 +42,18 @@ const Footer = () => {
       
       <div className="container mx-auto px-4 text-center relative z-10">
         <div className="space-y-6">
-          <div className="inline-block">
+          <div className="inline-block space-y-4">
             <h3 className="text-3xl font-extrabold bg-gradient-to-r from-primary via-primary-glow to-secondary bg-clip-text text-transparent">
               Univers Web SA Consulting
             </h3>
+            <div className="space-y-2">
+              <p className="text-lg font-bold text-foreground">
+                Omar Ndiaye
+              </p>
+              <p className="text-base text-muted-foreground font-medium">
+                Fondateur | Développeur Web | Entrepreneur
+              </p>
+            </div>
           </div>
           
           <div className="h-px w-40 mx-auto bg-gradient-to-r from-transparent via-primary to-transparent" />
