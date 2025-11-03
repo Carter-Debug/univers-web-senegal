@@ -38,6 +38,36 @@ export type Database = {
         }
         Relationships: []
       }
+      founder_profile: {
+        Row: {
+          bio: string | null
+          created_at: string | null
+          full_name: string
+          id: string
+          photo_url: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string | null
+          full_name: string
+          id?: string
+          photo_url?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string | null
+          full_name?: string
+          id?: string
+          photo_url?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       invoices: {
         Row: {
           amount: number
