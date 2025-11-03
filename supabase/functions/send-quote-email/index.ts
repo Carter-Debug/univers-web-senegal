@@ -52,6 +52,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     const emailResponse = await resend.emails.send({
       from: "UniversWeb <onboarding@resend.dev>",
+      replyTo: "universwebsaconsulting090@gmail.com",
       to: [client_email],
       subject: "Votre devis UniversWeb - Confirmation de réception",
       html: `
