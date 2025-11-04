@@ -50,77 +50,153 @@ const handler = async (req: Request): Promise<Response> => {
       premium: "Site Premium"
     }[service_type] || service_type;
 
+    // Générer un numéro de devis unique basé sur la date et un nombre aléatoire
+    const quoteNumber = `DEV-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
+    const currentDate = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+
     const emailResponse = await resend.emails.send({
       from: "UniversWeb <onboarding@resend.dev>",
       replyTo: "universwebsaconsulting090@gmail.com",
       to: [client_email],
-      subject: "Votre devis UniversWeb - Confirmation de réception",
+      subject: `Facture UniversWeb - Devis N°${quoteNumber}`,
       html: `
         <!DOCTYPE html>
         <html>
           <head>
             <meta charset="utf-8">
             <style>
-              body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-              .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-              .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
-              .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
-              .info-box { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #667eea; }
-              .price-box { background: #667eea; color: white; padding: 20px; text-align: center; border-radius: 8px; margin: 20px 0; }
-              .price { font-size: 32px; font-weight: bold; }
-              .discount { background: #10b981; color: white; padding: 5px 10px; border-radius: 5px; display: inline-block; margin-top: 10px; }
-              .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
-              h1 { margin: 0; font-size: 28px; }
-              h2 { color: #667eea; margin-top: 0; }
-              .label { font-weight: bold; color: #667eea; }
+              body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f5; }
+              .container { max-width: 650px; margin: 20px auto; background: white; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+              .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px 30px; }
+              .company-info { display: flex; justify-content: space-between; align-items: start; }
+              .logo { font-size: 32px; font-weight: bold; margin: 0; }
+              .invoice-details { text-align: right; }
+              .invoice-number { font-size: 20px; font-weight: bold; margin: 5px 0; }
+              .content { padding: 30px; }
+              .client-section { background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #667eea; }
+              .invoice-table { width: 100%; border-collapse: collapse; margin: 30px 0; }
+              .invoice-table th { background: #667eea; color: white; padding: 15px; text-align: left; font-weight: 600; }
+              .invoice-table td { padding: 15px; border-bottom: 1px solid #e0e0e0; }
+              .invoice-table tr:last-child td { border-bottom: none; }
+              .totals-section { background: #f9f9f9; padding: 20px; border-radius: 8px; margin: 20px 0; }
+              .total-row { display: flex; justify-content: space-between; padding: 10px 0; font-size: 16px; }
+              .total-row.discount { color: #10b981; font-weight: 600; }
+              .total-row.final { background: #667eea; color: white; padding: 15px; margin: 10px -20px -20px -20px; border-radius: 0 0 8px 8px; font-size: 24px; font-weight: bold; }
+              .payment-info { background: #fff3cd; padding: 20px; border-radius: 8px; border-left: 4px solid #ffc107; margin: 20px 0; }
+              .payment-methods { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; border: 2px solid #667eea; }
+              .method-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+              .method-item { padding: 10px; background: #f9f9f9; border-radius: 5px; text-align: center; font-weight: 600; }
+              .footer { background: #f9f9f9; padding: 30px; text-align: center; color: #666; font-size: 14px; }
+              .label { font-weight: 600; color: #667eea; }
+              .highlight { background: #10b981; color: white; padding: 3px 8px; border-radius: 4px; font-weight: 600; }
             </style>
           </head>
           <body>
             <div class="container">
               <div class="header">
-                <h1>✨ UniversWeb</h1>
-                <p style="margin: 10px 0 0 0; font-size: 18px;">Votre demande de devis a été reçue</p>
+                <div class="company-info">
+                  <div>
+                    <div class="logo">🌐 UniversWeb</div>
+                    <p style="margin: 5px 0 0 0; opacity: 0.9;">Consulting & Digital Solutions</p>
+                  </div>
+                  <div class="invoice-details">
+                    <div style="font-size: 24px; font-weight: bold;">FACTURE DEVIS</div>
+                    <div class="invoice-number">${quoteNumber}</div>
+                    <div style="opacity: 0.9;">${currentDate}</div>
+                  </div>
+                </div>
               </div>
               
               <div class="content">
-                <h2>Bonjour ${client_name},</h2>
-                <p>Nous avons bien reçu votre demande de devis. Notre équipe l'examinera dans les plus brefs délais et vous répondra sous 24 heures.</p>
-                
-                <div class="info-box">
-                  <h3 style="margin-top: 0; color: #667eea;">📋 Détails de votre demande</h3>
-                  <p><span class="label">Type de site:</span> ${serviceTypeLabel}</p>
-                  <p><span class="label">Téléphone:</span> ${client_phone}</p>
-                  <p><span class="label">Description:</span><br/>${description}</p>
-                  ${promo_code ? `<p><span class="label">Code promo utilisé:</span> <span class="discount">${promo_code}</span></p>` : ''}
+                <div class="client-section">
+                  <h3 style="margin-top: 0; color: #667eea;">👤 Informations Client</h3>
+                  <p style="margin: 8px 0;"><span class="label">Nom:</span> ${client_name}</p>
+                  <p style="margin: 8px 0;"><span class="label">Email:</span> ${client_email}</p>
+                  <p style="margin: 8px 0;"><span class="label">Téléphone:</span> ${client_phone}</p>
                 </div>
-                
-                <div class="price-box">
-                  <div>Prix estimé</div>
+
+                <table class="invoice-table">
+                  <thead>
+                    <tr>
+                      <th>Description du Service</th>
+                      <th style="text-align: right; width: 150px;">Montant (FCFA)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <strong>${serviceTypeLabel}</strong>
+                        <div style="color: #666; font-size: 14px; margin-top: 5px;">${description}</div>
+                      </td>
+                      <td style="text-align: right; font-weight: 600; font-size: 18px;">
+                        ${estimated_price.toLocaleString()}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+                <div class="totals-section">
+                  <div class="total-row">
+                    <span>Sous-total</span>
+                    <span>${estimated_price.toLocaleString()} FCFA</span>
+                  </div>
                   ${discount_percentage > 0 ? `
-                    <div style="text-decoration: line-through; opacity: 0.7; font-size: 18px; margin-top: 10px;">
-                      ${estimated_price.toLocaleString()} FCFA
+                    <div class="total-row discount">
+                      <span>💰 Réduction ${promo_code ? `(${promo_code})` : ''} (-${discount_percentage}%)</span>
+                      <span>-${(estimated_price - final_price).toLocaleString()} FCFA</span>
                     </div>
-                    <div class="price">${final_price.toLocaleString()} FCFA</div>
-                    <div class="discount">Réduction de ${discount_percentage}%</div>
-                  ` : `
-                    <div class="price">${final_price.toLocaleString()} FCFA</div>
-                  `}
+                  ` : ''}
+                  <div class="total-row final">
+                    <span>TOTAL À PAYER</span>
+                    <span>${final_price.toLocaleString()} FCFA</span>
+                  </div>
                 </div>
-                
-                <div class="info-box">
-                  <h3 style="margin-top: 0; color: #667eea;">📞 Besoin d'aide ?</h3>
-                  <p>Notre équipe est disponible du lundi au vendredi de 9h à 18h.</p>
-                  <p><span class="label">Email:</span> contact@universweb.com</p>
-                  <p><span class="label">Téléphone:</span> +221 77 123 45 67</p>
+
+                <div class="payment-info">
+                  <h3 style="margin-top: 0; color: #f59e0b;">⚠️ Informations Importantes</h3>
+                  <p style="margin: 8px 0;">✅ Ce devis est valable pendant <strong>30 jours</strong></p>
+                  <p style="margin: 8px 0;">✅ Notre équipe vous contactera sous <strong>24 heures</strong></p>
+                  <p style="margin: 8px 0;">✅ Délai de réalisation estimé: <strong>2-4 semaines</strong></p>
                 </div>
-                
-                <p style="margin-top: 30px;">Merci de votre confiance ! 🚀</p>
-                <p style="margin: 5px 0;"><strong>L'équipe UniversWeb</strong></p>
+
+                <div class="payment-methods">
+                  <h3 style="margin-top: 0; color: #667eea; text-align: center;">💳 Moyens de Paiement Acceptés</h3>
+                  <div class="method-list">
+                    <div class="method-item">📱 Wave</div>
+                    <div class="method-item">🟠 Orange Money</div>
+                    <div class="method-item">🟢 YAS</div>
+                    <div class="method-item">🔵 Wizall</div>
+                    <div class="method-item">🔑 Keyzen</div>
+                    <div class="method-item">💳 Visa</div>
+                    <div class="method-item">🏦 UBA</div>
+                    <div class="method-item">🌍 PayPal</div>
+                  </div>
+                </div>
+
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid #10b981;">
+                  <h3 style="margin-top: 0; color: #10b981;">📞 Besoin d'Aide ou de Modifications ?</h3>
+                  <p style="margin: 8px 0;">Notre équipe est à votre disposition du <strong>lundi au vendredi de 9h à 18h</strong></p>
+                  <p style="margin: 8px 0;"><span class="label">📧 Email:</span> universwebsaconsulting090@gmail.com</p>
+                  <p style="margin: 8px 0;"><span class="label">📱 Téléphone:</span> +221 77 123 45 67</p>
+                  <p style="margin: 8px 0;"><span class="label">🌐 Site Web:</span> www.universweb.sn</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 8px;">
+                  <p style="margin: 0; font-size: 18px; font-weight: 600;">Merci de votre confiance ! 🚀</p>
+                  <p style="margin: 10px 0 0 0;">L'équipe UniversWeb vous accompagne dans la réussite de votre projet digital</p>
+                </div>
               </div>
               
               <div class="footer">
-                <p>© ${new Date().getFullYear()} UniversWeb - Création de sites web professionnels au Sénégal</p>
-                <p style="font-size: 12px; color: #999;">Cet email a été envoyé automatiquement, merci de ne pas y répondre directement.</p>
+                <p style="font-weight: 600; margin: 10px 0;">UniversWeb - Consulting & Digital Solutions</p>
+                <p style="margin: 5px 0;">Dakar, Sénégal</p>
+                <p style="margin: 5px 0;">📧 universwebsaconsulting090@gmail.com</p>
+                <p style="margin: 20px 0 10px 0; padding-top: 20px; border-top: 1px solid #ddd;">
+                  © ${new Date().getFullYear()} UniversWeb - Tous droits réservés
+                </p>
+                <p style="font-size: 12px; color: #999; margin: 5px 0;">
+                  Cette facture a été générée automatiquement. Pour toute question, répondez directement à cet email.
+                </p>
               </div>
             </div>
           </body>
