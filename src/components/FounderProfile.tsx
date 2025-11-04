@@ -27,7 +27,7 @@ const FounderProfile = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12 animate-fade-in">
             <div className="inline-block px-6 py-2 bg-primary/10 rounded-full mb-4">
-              <span className="text-sm font-semibold text-primary uppercase tracking-wider">Le Fondateur</span>
+              <span className="text-sm font-semibold text-primary uppercase tracking-wider">Omar Ndiaye</span>
             </div>
             <h2 className="text-4xl md:text-5xl font-extrabold text-foreground tracking-tight">
               Qui suis-je ?
