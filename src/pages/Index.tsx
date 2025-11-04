@@ -5,7 +5,6 @@ import PremiumServices from "@/components/PremiumServices";
 import Portfolio from "@/components/Portfolio";
 import Video from "@/components/Video";
 import About from "@/components/About";
-import FounderProfile from "@/components/FounderProfile";
 import Testimonials from "@/components/Testimonials";
 import QuoteRequest from "@/components/QuoteRequest";
 import PaymentOptions from "@/components/PaymentOptions";
@@ -23,7 +22,6 @@ const Index = () => {
       <Portfolio />
       <Video />
       <About />
-      <FounderProfile />
       <Testimonials />
       <QuoteRequest />
       <PaymentOptions />
