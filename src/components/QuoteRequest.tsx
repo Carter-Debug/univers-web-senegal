@@ -58,6 +58,7 @@ const QuoteRequest = () => {
         }
       }
 
+      console.log("📝 Enregistrement du devis dans la base de données...");
       const { error } = await supabase
         .from("quotes")
         .insert({
@@ -73,42 +74,41 @@ const QuoteRequest = () => {
           status: "pending"
         });
 
-      if (error) throw error;
+      if (error) {
+        console.error("❌ Erreur lors de l'enregistrement du devis:", error);
+        throw error;
+      }
 
-      // Envoyer l'email de facture au client
-      try {
-        const emailResult = await supabase.functions.invoke('send-quote-email', {
-          body: {
-            client_name: formData.client_name,
-            client_email: formData.client_email,
-            client_phone: formData.client_phone,
-            service_type: formData.service_type,
-            description: formData.description,
-            estimated_price: estimatedPrice,
-            final_price: finalPrice,
-            discount_percentage: discountPercentage,
-            promo_code: formData.promo_code || undefined
-          }
-        });
-        
-        if (emailResult.error) {
-          console.error("Error sending invoice email:", emailResult.error);
-          toast.warning("Devis enregistré", {
-            description: "Votre demande a été enregistrée mais l'envoi de la facture par email a échoué. Nous vous contacterons directement.",
-            duration: 6000
-          });
-        } else {
-          console.log("Invoice email sent successfully:", emailResult);
-          toast.success("📧 Facture envoyée par email!", {
-            description: `Une facture détaillée (${finalPrice.toLocaleString()} FCFA${discountPercentage > 0 ? ` avec ${discountPercentage}% de réduction` : ""}) a été envoyée à ${formData.client_email}`,
-            duration: 6000
-          });
+      console.log("✅ Devis enregistré avec succès!");
+      console.log(`📧 Envoi automatique de la facture à ${formData.client_email}...`);
+
+      // AUTOMATISATION: Envoi automatique de la facture par email au client
+      const emailResult = await supabase.functions.invoke('send-quote-email', {
+        body: {
+          client_name: formData.client_name,
+          client_email: formData.client_email,
+          client_phone: formData.client_phone,
+          service_type: formData.service_type,
+          description: formData.description,
+          estimated_price: estimatedPrice,
+          final_price: finalPrice,
+          discount_percentage: discountPercentage,
+          promo_code: formData.promo_code || undefined
         }
-      } catch (emailError) {
-        console.error("Error sending invoice email:", emailError);
-        toast.warning("Devis enregistré", {
-          description: "Votre demande a été enregistrée mais l'envoi de la facture par email a échoué. Nous vous contacterons directement.",
-          duration: 6000
+      });
+      
+      if (emailResult.error) {
+        console.error("❌ Erreur lors de l'envoi de la facture par email:", emailResult.error);
+        toast.error("Erreur d'envoi de la facture", {
+          description: `Le devis est enregistré mais la facture n'a pas pu être envoyée à ${formData.client_email}. Nous vous contacterons directement.`,
+          duration: 8000
+        });
+      } else {
+        console.log("✅ Facture envoyée avec succès par email!");
+        console.log("📧 Email envoyé à:", formData.client_email);
+        toast.success("✅ Facture envoyée automatiquement!", {
+          description: `Une facture professionnelle (${finalPrice.toLocaleString()} FCFA${discountPercentage > 0 ? ` avec ${discountPercentage}% de réduction` : ""}) a été envoyée automatiquement à ${formData.client_email}. Vérifiez votre boîte email.`,
+          duration: 8000
         });
       }
 

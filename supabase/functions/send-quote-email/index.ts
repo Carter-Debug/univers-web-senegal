@@ -40,7 +40,10 @@ const handler = async (req: Request): Promise<Response> => {
       promo_code,
     }: QuoteEmailRequest = await req.json();
 
-    console.log("Sending quote email to:", client_email);
+    console.log("=== DÉBUT ENVOI AUTOMATIQUE DE FACTURE ===");
+    console.log("📧 Destinataire:", client_email);
+    console.log("👤 Client:", client_name);
+    console.log("💰 Montant final:", final_price, "FCFA");
 
     const serviceTypeLabel = {
       vitrine: "Site Vitrine",
@@ -54,11 +57,12 @@ const handler = async (req: Request): Promise<Response> => {
     const quoteNumber = `DEV-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`;
     const currentDate = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
 
+    console.log("📤 Envoi de l'email de facture en cours...");
     const emailResponse = await resend.emails.send({
       from: "UniversWeb <onboarding@resend.dev>",
       replyTo: "universwebsaconsulting090@gmail.com",
       to: [client_email],
-      subject: `Facture UniversWeb - Devis N°${quoteNumber}`,
+      subject: `✅ Facture UniversWeb - Devis N°${quoteNumber}`,
       html: `
         <!DOCTYPE html>
         <html>
@@ -204,9 +208,17 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
-    console.log("Email sent successfully:", emailResponse);
+    console.log("✅ FACTURE ENVOYÉE AVEC SUCCÈS!");
+    console.log("📧 Email ID:", emailResponse.data?.id);
+    console.log("=== FIN ENVOI AUTOMATIQUE DE FACTURE ===");
 
-    return new Response(JSON.stringify({ success: true, emailResponse }), {
+    return new Response(JSON.stringify({ 
+      success: true, 
+      message: "Facture envoyée automatiquement par email",
+      email: client_email,
+      invoice_number: quoteNumber,
+      emailResponse 
+    }), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
@@ -214,9 +226,13 @@ const handler = async (req: Request): Promise<Response> => {
       },
     });
   } catch (error: any) {
-    console.error("Error in send-quote-email function:", error);
+    console.error("❌ ERREUR LORS DE L'ENVOI DE LA FACTURE:", error);
+    console.error("Détails de l'erreur:", error.message);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ 
+        error: error.message,
+        details: "L'envoi automatique de la facture par email a échoué"
+      }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },
