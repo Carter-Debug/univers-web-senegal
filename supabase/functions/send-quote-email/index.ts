@@ -208,6 +208,33 @@ const handler = async (req: Request): Promise<Response> => {
       `,
     });
 
+    // Vérification du résultat de l'envoi
+    if (emailResponse.error || !emailResponse.data?.id) {
+      console.error("❌ Échec de l'envoi de l'email de facture.");
+      if ((emailResponse as any).error) {
+        console.error("Code:", (emailResponse as any).error?.statusCode, "Nom:", (emailResponse as any).error?.name);
+        console.error("Message:", (emailResponse as any).error?.message);
+      }
+      console.log("=== FIN ENVOI AUTOMATIQUE DE FACTURE ===");
+
+      return new Response(
+        JSON.stringify({
+          success: false,
+          message: "Échec de l'envoi automatique de la facture",
+          reason: (emailResponse as any).error?.message ?? "Envoi non accepté par le fournisseur d'email",
+          email: client_email,
+          invoice_number: quoteNumber
+        }),
+        {
+          status: 502,
+          headers: {
+            "Content-Type": "application/json",
+            ...corsHeaders,
+          },
+        }
+      );
+    }
+
     console.log("✅ FACTURE ENVOYÉE AVEC SUCCÈS!");
     console.log("📧 Email ID:", emailResponse.data?.id);
     console.log("=== FIN ENVOI AUTOMATIQUE DE FACTURE ===");
