@@ -75,9 +75,9 @@ const QuoteRequest = () => {
 
       if (error) throw error;
 
-      // Envoyer l'email de confirmation au client
+      // Envoyer l'email de facture au client
       try {
-        await supabase.functions.invoke('send-quote-email', {
+        const emailResult = await supabase.functions.invoke('send-quote-email', {
           body: {
             client_name: formData.client_name,
             client_email: formData.client_email,
@@ -90,15 +90,27 @@ const QuoteRequest = () => {
             promo_code: formData.promo_code || undefined
           }
         });
-        console.log("Email sent successfully");
+        
+        if (emailResult.error) {
+          console.error("Error sending invoice email:", emailResult.error);
+          toast.warning("Devis enregistré", {
+            description: "Votre demande a été enregistrée mais l'envoi de la facture par email a échoué. Nous vous contacterons directement.",
+            duration: 6000
+          });
+        } else {
+          console.log("Invoice email sent successfully:", emailResult);
+          toast.success("📧 Facture envoyée par email!", {
+            description: `Une facture détaillée (${finalPrice.toLocaleString()} FCFA${discountPercentage > 0 ? ` avec ${discountPercentage}% de réduction` : ""}) a été envoyée à ${formData.client_email}`,
+            duration: 6000
+          });
+        }
       } catch (emailError) {
-        console.error("Error sending email:", emailError);
-        // Ne pas bloquer l'utilisateur si l'email échoue
+        console.error("Error sending invoice email:", emailError);
+        toast.warning("Devis enregistré", {
+          description: "Votre demande a été enregistrée mais l'envoi de la facture par email a échoué. Nous vous contacterons directement.",
+          duration: 6000
+        });
       }
-
-      toast.success("Demande de devis envoyée avec succès!", {
-        description: `Prix estimé: ${finalPrice.toLocaleString()} FCFA ${discountPercentage > 0 ? `(Réduction de ${discountPercentage}%)` : ""}. Un email de confirmation vous a été envoyé.`
-      });
 
       setFormData({
         client_name: "",
