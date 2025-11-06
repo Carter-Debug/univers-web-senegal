@@ -28,6 +28,19 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Validation précoce de la clé API Resend (sans exposer la clé)
+  if (!RESEND_API_KEY || !RESEND_API_KEY.startsWith("re_")) {
+    console.error("❌ RESEND_API_KEY absente ou invalide (format).");
+    return new Response(
+      JSON.stringify({
+        success: false,
+        message: "Configuration email manquante",
+        reason: "RESEND_API_KEY absente ou invalide",
+      }),
+      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+    );
+  }
+
   try {
     const {
       client_name,
