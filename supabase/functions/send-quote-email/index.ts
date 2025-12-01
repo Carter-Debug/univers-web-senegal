@@ -73,8 +73,7 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("📤 Envoi de l'email de facture en cours...");
     const emailResponse = await resend.emails.send({
-      from: "UniversWeb <onboarding@resend.dev>",
-      replyTo: "universwebsaconsulting090@gmail.com",
+      from: "UniversWeb <universwebsaconsulting090@gmail.com>",
       to: [client_email],
       subject: `✅ Facture UniversWeb - Devis N°${quoteNumber}`,
       html: `
