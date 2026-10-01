@@ -1,73 +1,49 @@
-import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/hero-image.jpg";
-import { ArrowRight } from "lucide-react";
 
-const Hero = () => {
-  const handleContact = () => {
-    const contactSection = document.getElementById('contact');
-    contactSection?.scrollIntoView({ behavior: 'smooth' });
-  };
+const nav = [
+  { href: "#services", label: "Tarifs" },
+  { href: "#portfolio", label: "Réalisations" },
+  { href: "#quote", label: "Devis" },
+  { href: "#contact", label: "Contact" },
+];
 
-  return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Background Image with Overlay */}
-      <div 
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: `url(${heroImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        <div className="absolute inset-0 bg-[linear-gradient(135deg,hsl(var(--primary)/0.95),hsl(var(--primary)/0.75),hsl(var(--secondary)/0.60))]" />
+const Hero = () => (
+  <header className="max-w-3xl mx-auto px-5 pt-6">
+    <nav className="flex items-center justify-between text-sm border-b border-border pb-4">
+      <a href="#" className="font-serif text-xl">Univers Web <span className="italic">SA Consulting</span></a>
+      <ul className="hidden sm:flex gap-6 text-muted-foreground">
+        {nav.map((n) => (
+          <li key={n.href}><a href={n.href} className="hover:text-foreground underline-offset-4 hover:underline">{n.label}</a></li>
+        ))}
+      </ul>
+      <a href="tel:+221775936938" className="sm:hidden text-primary">Appeler</a>
+    </nav>
+
+    <section className="pt-16 pb-12">
+      <p className="text-sm text-muted-foreground mb-6">Dakar · Création de sites web depuis 2020</p>
+      <h1 className="text-5xl sm:text-7xl leading-[1.02]">
+        On fait votre site.<br />
+        <span className="italic text-primary">Vous gérez votre affaire.</span>
+      </h1>
+      <p className="mt-8 text-lg max-w-xl text-muted-foreground">
+        Sites vitrines, sites d'entreprise, ONG et boutiques en ligne. Prix fixes, affichés plus bas.
+        Livraison en 2 à 4 semaines selon le projet.
+      </p>
+      <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 items-center">
+        <a href="#quote" className="bg-foreground text-background px-5 py-3 rounded-sm text-sm font-medium hover:bg-primary transition-colors">
+          Demander un devis
+        </a>
+        <a href="https://wa.me/221775936938" target="_blank" rel="noopener noreferrer" className="text-sm underline underline-offset-4">
+          Écrire sur WhatsApp — 77 593 69 38
+        </a>
       </div>
-
-      {/* Animated gradient orbs */}
-      <div className="absolute top-20 left-10 w-72 h-72 bg-primary-glow/20 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }} />
-
-      {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-20 text-center">
-        <div className="max-w-5xl mx-auto space-y-10 animate-fade-in">
-          <div className="space-y-6">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold text-primary-foreground leading-[1.1] tracking-tight">
-              Univers Web SA
-              <span className="block mt-2 bg-gradient-to-r from-secondary via-secondary-light to-secondary bg-clip-text text-transparent">
-                Consulting
-              </span>
-            </h1>
-            <p className="text-xl md:text-2xl lg:text-3xl text-primary-foreground/95 max-w-3xl mx-auto font-light leading-relaxed">
-              Votre partenaire digital au Sénégal pour des solutions web 
-              <span className="font-semibold"> modernes et performantes</span>
-            </p>
-          </div>
-          
-          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8">
-            <Button 
-              variant="hero" 
-              size="lg"
-              onClick={handleContact}
-              className="text-lg px-10 py-7 shadow-[var(--shadow-hover)] hover:shadow-[var(--shadow-glow)] group"
-            >
-              Contactez-nous
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button 
-              variant="outline" 
-              size="lg"
-              onClick={() => document.getElementById('services')?.scrollIntoView({ behavior: 'smooth' })}
-              className="text-lg px-10 py-7 bg-background/10 backdrop-blur-md border-2 border-primary-foreground/30 text-primary-foreground hover:bg-background/25 hover:border-primary-foreground/50 transition-all duration-300"
-            >
-              Nos Services
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {/* Decorative Elements */}
-      <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-background via-background/50 to-transparent z-10" />
     </section>
-  );
-};
+
+    <figure className="-mx-5 sm:mx-0">
+      <img src={heroImage} alt="Notre équipe au travail à Dakar" className="w-full aspect-[16/9] object-cover sm:rounded-sm" />
+      <figcaption className="px-5 sm:px-0 mt-2 text-xs text-muted-foreground">L'atelier, à Dakar.</figcaption>
+    </figure>
+  </header>
+);
 
 export default Hero;
